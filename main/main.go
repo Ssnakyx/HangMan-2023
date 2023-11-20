@@ -8,8 +8,8 @@ import (
 )
 
 func main() {
-	fmt.Println("Welcome to the Hangman Game!")
-	fmt.Println("Choose a file:")
+	fmt.Println("Hangman")
+	fmt.Println("Choisis un fichier")
 	fmt.Println("1. Words 1")
 	fmt.Println("2. Words 2")
 	fmt.Println("3. Words 3")
