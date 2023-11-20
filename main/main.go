@@ -8,16 +8,17 @@ import (
 )
 
 func main() {
-	fmt.Println("Choisissez un fichier :")
-	fmt.Println("1. words.txt")
-	fmt.Println("2. words2.txt")
-	fmt.Println("3. words3.txt")
+	fmt.Println("Welcome to the Hangman Game!")
+	fmt.Println("Choose a file:")
+	fmt.Println("1. Words 1")
+	fmt.Println("2. Words 2")
+	fmt.Println("3. Words 3")
 
-	var choix int
-	fmt.Scanln(&choix)
+	var choice int
+	fmt.Scanln(&choice)
 
 	var filename string
-	switch choix {
+	switch choice {
 	case 1:
 		filename = "words.txt"
 	case 2:
@@ -25,22 +26,22 @@ func main() {
 	case 3:
 		filename = "words3.txt"
 	default:
-		fmt.Println("Choix invalide")
+		fmt.Println("fichier introuvable")
 		return
 	}
 
 	words, err := readWordsFromFile(filename)
 	if err != nil {
-		fmt.Println("Fichier non trouvé", err)
+		fmt.Println("fichier introuvable", err)
 		return
 	}
 
 	rand.Seed(time.Now().UnixNano())
-	Word_find := getRandomWordFromList(words)
-	letter_Found := make([]string, 0)
+	word := getRandomWordFromList(words)
+	letter := make([]string, 0)
 	maxAttempts := 6
-	Attemps := maxAttempts
-	hangmanStages := []string{
+	attempts := maxAttempts
+	stage := []string{
 		`
   +---+
   |   |
@@ -105,38 +106,34 @@ func main() {
 =======
 `,
 	}
-	Game_Stats := 0
 
-	fmt.Println("HangMan game")
-	displayGameStatus(Word_find, letter_Found, Attemps, hangmanStages, Game_Stats)
+	fmt.Println("Hangman")
+	displayGameStatus(word, letter, attempts, stage)
 
-	for Attemps > 0 {
+	for attempts > 0 {
 		guess := getUserGuess()
-		letter_Found = append(letter_Found, guess)
+		letter = append(letter, guess)
 
-		if strings.Contains(Word_find, guess) {
-			fmt.Println("Bien jouer")
+		guessedCorrectly := isWordGuessed(word, letter)
+
+		if strings.Contains(word, guess) {
+			fmt.Println("bravo")
 		} else {
-			fmt.Println("Lettre incorrecte, il reste", Attemps, "essais")
-			Game_Stats++
-			if !wordToGuess(Word_find, letter_Found) {
-				Attemps--
+			fmt.Println("lettre incorrecte il reste", attempts, "essais")
+			if !guessedCorrectly {
+				attempts--
 			}
 		}
 
-		displayGameStatus(Word_find, letter_Found, Attemps, hangmanStages, Game_Stats)
+		displayGameStatus(word, letter, attempts, stage)
 
-		if wordToGuess(Word_find, letter_Found) {
-			fmt.Println("Bravo le mot était :", Word_find)
+		if guessedCorrectly {
+			fmt.Println("Bravo vous avez trouve le mot", word)
 			break
 		}
 	}
 
-	if Attemps == 0 {
-		fmt.Println("Le mot était :", Word_find)
-	}
-
-	if Attemps == 0 && !wordToGuess(Word_find, letter_Found) {
-		fmt.Println("Perdu vous n'avez plus d'éssais")
+	if attempts == 0 {
+		fmt.Println("Dommage le mot etait", word)
 	}
 }
