@@ -7,7 +7,9 @@ import (
 	"os"
 )
 
-func wordToGuess(word string, found []string) bool {
+var maxAttempts = 6
+
+func isWordGuessed(word string, found []string) bool {
 	for _, letter := range word {
 		if !contains(found, string(letter)) {
 			return false
@@ -52,16 +54,16 @@ func getRandomWordFromList(words []string) string {
 
 func getUserGuess() string {
 	var guess string
-	fmt.Print("Entrez une lettre : ")
+	fmt.Print("Entrer une lettre ")
 	fmt.Scanln(&guess)
 	return guess
 }
 
-func displayGameStatus(word string, found []string, attemptsRemaining int, hangmanStages []string, currentStage int) {
-	fmt.Println("\nMot à deviner :")
+func displayGameStatus(word string, found []string, attemptsRemaining int, stage []string) {
+	fmt.Println("\nmot a trouver")
 	displayWord(word, found)
-	fmt.Println("\nEssais restants :", attemptsRemaining)
-	fmt.Println(hangmanStages[currentStage])
+	fmt.Println("\nessais restant", attemptsRemaining)
+	fmt.Println(stage[maxAttempts-attemptsRemaining])
 }
 
 func displayWord(word string, found []string) {
